@@ -1,0 +1,21 @@
+# LLM
+requests==2.31.0
+
+# Database
+psycopg2-binary==2.9.9
+
+# Embeddings (for vector search later)
+sentence-transformers==2.5.1
+
+# Data processing
+numpy==1.26.4
+pandas==2.2.1
+
+# SQL parsing
+sqlparse==0.4.4
+
+# UI (will use later)
+streamlit==1.31.1
+
+# Testing
+pytest==8.0.2
