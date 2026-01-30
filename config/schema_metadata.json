@@ -1,0 +1,176 @@
+[
+  {
+    "table_name": "alerts",
+    "columns": [
+      {
+        "name": "alert_id",
+        "type": "uuid",
+        "nullable": false,
+        "default": "uuid_generate_v4()"
+      },
+      {
+        "name": "symbol",
+        "type": "character varying",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "alert_type",
+        "type": "character varying",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "price",
+        "type": "numeric",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "trade_value",
+        "type": "numeric",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "message",
+        "type": "text",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "details",
+        "type": "jsonb",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": true,
+        "default": "CURRENT_TIMESTAMP"
+      }
+    ],
+    "description_text": "Table: alerts\nColumns:\n  - alert_id (uuid) NOT NULL\n  - symbol (character varying) NOT NULL\n  - alert_type (character varying) NOT NULL\n  - price (numeric)\n  - trade_value (numeric)\n  - message (text)\n  - details (jsonb)\n  - created_at (timestamp without time zone)\n\nPurpose: Stores whale trade alerts - large cryptocurrency transactions over $500K. Includes trade details, prices, and detection timestamps.\n"
+  },
+  {
+    "table_name": "latest_prices",
+    "columns": [
+      {
+        "name": "symbol",
+        "type": "character varying",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "price",
+        "type": "numeric",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "volume_24h",
+        "type": "numeric",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": true,
+        "default": "CURRENT_TIMESTAMP"
+      }
+    ],
+    "description_text": "Table: latest_prices\nColumns:\n  - symbol (character varying) NOT NULL\n  - price (numeric) NOT NULL\n  - volume_24h (numeric)\n  - updated_at (timestamp without time zone)\n\nPurpose: Current cryptocurrency prices for tracked symbols (BTC, ETH, BNB). Updated in real-time from market data.\n"
+  },
+  {
+    "table_name": "trade_stats",
+    "columns": [
+      {
+        "name": "stat_id",
+        "type": "uuid",
+        "nullable": false,
+        "default": "uuid_generate_v4()"
+      },
+      {
+        "name": "symbol",
+        "type": "character varying",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "window_start",
+        "type": "timestamp without time zone",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "window_end",
+        "type": "timestamp without time zone",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "trade_count",
+        "type": "integer",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "total_volume",
+        "type": "numeric",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "avg_price",
+        "type": "numeric",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": true,
+        "default": "CURRENT_TIMESTAMP"
+      }
+    ],
+    "description_text": "Table: trade_stats\nColumns:\n  - stat_id (uuid) NOT NULL\n  - symbol (character varying) NOT NULL\n  - window_start (timestamp without time zone) NOT NULL\n  - window_end (timestamp without time zone) NOT NULL\n  - trade_count (integer)\n  - total_volume (numeric)\n  - avg_price (numeric)\n  - created_at (timestamp without time zone)\n\nPurpose: Aggregated trading statistics including volume, trade counts, and average prices per time window.\n"
+  },
+  {
+    "table_name": "whale_config",
+    "columns": [
+      {
+        "name": "symbol",
+        "type": "character varying",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "whale_threshold",
+        "type": "numeric",
+        "nullable": true,
+        "default": "500000"
+      },
+      {
+        "name": "large_trade_threshold",
+        "type": "numeric",
+        "nullable": true,
+        "default": "100000"
+      },
+      {
+        "name": "volume_spike_multiplier",
+        "type": "numeric",
+        "nullable": true,
+        "default": "5.0"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": true,
+        "default": "CURRENT_TIMESTAMP"
+      }
+    ],
+    "description_text": "Table: whale_config\nColumns:\n  - symbol (character varying) NOT NULL\n  - whale_threshold (numeric)\n  - large_trade_threshold (numeric)\n  - volume_spike_multiplier (numeric)\n  - updated_at (timestamp without time zone)\n\nPurpose: Configuration table for whale detection thresholds and parameters per symbol.\n"
+  }
+]
