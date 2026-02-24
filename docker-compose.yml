@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  # PostgreSQL database - for testing
+  postgres:
+    image: postgres:15-alpine
+    container_name: db-copilot-postgres
+    environment:
+      POSTGRES_DB: testdb
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: dbpass123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - db-copilot-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dbuser -d testdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Ollama service - runs LLM locally
+  ollama:
+    image: ollama/ollama:latest
+    container_name: db-copilot-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./models:/root/.ollama
+    restart: unless-stopped
+    networks:
+      - db-copilot-network
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Streamlit app - the main application
+  app:
+    build: .
+    container_name: db-copilot-app
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./app:/app
+      - ./data:/data
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=testdb
+      - DB_USER=dbuser
+      - DB_PASSWORD=dbpass123
+    depends_on:
+      postgres:
+        condition: service_healthy
+      ollama:
+        condition: service_started
+    restart: unless-stopped
+    networks:
+      - db-copilot-network
+    command: streamlit run main.py --server.address=0.0.0.0
+
+networks:
+  db-copilot-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
